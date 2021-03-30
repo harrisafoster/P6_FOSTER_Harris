@@ -1,8 +1,8 @@
 import requests
 import json
 from flask import jsonify
-## paramenters to reconsctruct URLS requests documentation
-## get rid of json maker
+
+
 class OcMoviesApi:
     def __init__(self):
         self.url = 'http://localhost:8000/api/v1/titles/'
@@ -23,6 +23,3 @@ class OcMoviesApi:
     def top_20(self):
         search_parameters = {'sort_by': '-imdb_score'}
         return self.json_maker(self.url, search_parameters)
-## get and return data in these methods, used in flask file
-## flask dans contrôleurs
-## no views, accomplished in javascript
