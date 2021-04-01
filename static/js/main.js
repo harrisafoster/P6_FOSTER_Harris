@@ -24,7 +24,7 @@ function isolateTop20(genre) {
             }
         })
         return isolatedMoviesTop20[genre];
-    } else {
+    } else { //can delete second half of this function. grab id/title/img only, request other details by ID
         isolatedMoviesTop20[genre] = [];
         fetchTop20Genre('overall').then(movies => {
             movies;

@@ -23,3 +23,4 @@ class OcMoviesApi:
     def top_20(self):
         search_parameters = {'sort_by': '-imdb_score'}
         return self.json_maker(self.url, search_parameters)
+    ## method to get a film by ID? http://localhost:8000/api/v1/titles/9
