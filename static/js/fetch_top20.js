@@ -1,26 +1,19 @@
 async function fetchTop20() {
-    let url = 'http://localhost:5000/top20';
-    try {
-        let res = await fetch(url);
-        return await res.json();
-    } catch (error) {
-        console.log(error);
+    const reponse = await fetch('http://localhost:5000/top20');
+    const movies = await reponse.json();
+    return movies;
+}
+
+fetchTop20().then(movies => {
+    movies;
+    isolatedMovies = [];
+    for (moviePage = 1; moviePage < 5; moviePage++) {
+        var moviePages = movies[String(moviePage)]['results'];
+        for (movie = 0; movie < 5; movie++) {
+            isolatedMovies.push(moviePages[String(movie)]);
+        }
     }
-}
-/// problem, array type object? forEach isn't working
-async function renderTop20() {
-    let movies = await fetchTop20();
-    let html = '';
-    movies.forEach(movie => {
-        let htmlSegment = `<div class="movie">
-                           <img src="${movie.image_url}" >
-                           <h2>${movie.title} ${movie.imdb_score}</h2>
-                           </div>`;
-        html += htmlSegment;
-    });
+    console.log(isolatedMovies);
+})
 
-let container = document.querySelector('.container');
-container.innerHTML = html;
-}
-
-renderTop20()
+//['1']['results']['0']
