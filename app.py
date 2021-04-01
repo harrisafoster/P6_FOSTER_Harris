@@ -16,7 +16,7 @@ def query_top20_genre(genre):
     api = OcMoviesApi()
     return api.top_20_genre(genre)
 
-@app.route('/top20')
+@app.route('/top20/overall')
 def query_top20():
     api = OcMoviesApi()
     return api.top_20()
