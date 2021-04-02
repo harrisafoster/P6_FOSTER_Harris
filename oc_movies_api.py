@@ -1,6 +1,5 @@
 import requests
 import json
-from flask import jsonify
 import pandas as pd
 
 
@@ -32,7 +31,6 @@ class OcMoviesApi:
     def top_20(self):
         search_parameters = {'sort_by': '-imdb_score'}
         return self.json_maker(self.url, search_parameters)
-    ## method to get a film by ID? http://localhost:8000/api/v1/titles/9
+    
     def get_film_by_id(self, id):
-        search_parameters = {str(id)}
         return json.loads(requests.get((self.url + str(id))).content)
