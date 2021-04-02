@@ -12,29 +12,8 @@ async function fetchTop20Genre(genre) {
 
 function isolateTop20(genre) {
     var isolatedMoviesTop20 = [];
-    if (genre != 'overall') {
-        isolatedMoviesTop20[genre] = [];
-        fetchTop20Genre(genre).then(movies => {
-            movies;
-            for (moviePage = 1; moviePage < 5; moviePage++) {
-                var moviePages = movies[String(moviePage)]['results'];
-                for (movie = 0; movie < 5; movie++) {
-                    isolatedMoviesTop20[genre].push(moviePages[String(movie)]);
-                }
-            }
-        })
-        return isolatedMoviesTop20[genre];
-    } else { //can delete second half of this function. grab id/title/img only, request other details by ID
-        isolatedMoviesTop20[genre] = [];
-        fetchTop20Genre('overall').then(movies => {
-            movies;
-            for (moviePage = 1; moviePage < 5; moviePage++) {
-                var moviePages = movies[String(moviePage)]['results'];
-                for (movie = 0; movie < 5; movie++) {
-                    isolatedMoviesTop20[genre].push(moviePages[String(movie)]);
-                }
-            }
-        })
+    if (genre) {
+        isolatedMoviesTop20[genre] = fetchTop20Genre(genre);
         return isolatedMoviesTop20[genre];
     }
 }
