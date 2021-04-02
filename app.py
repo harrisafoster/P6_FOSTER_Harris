@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for
 import requests
 import json
 from oc_movies_api import OcMoviesApi
@@ -20,6 +20,11 @@ def query_top20_genre(genre):
 def query_top20():
     api = OcMoviesApi()
     return api.top_20()
+
+@app.route('/movies/id/<movie_id>')
+def query_by_id(movie_id):
+    api = OcMoviesApi()
+    return api.get_film_by_id(movie_id)
 
 if __name__ == "__main__":
     app.run(debug=True)
