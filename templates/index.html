@@ -1,20 +1,14 @@
 {% extends 'layout.html' %}
 
-{% block content %}
-<h1>Top 20 films</h1>
-    <div class='top20'></div>
-    <script type=text/javascript src="{{
-        url_for('static', filename='js/main.js') }}"></script>
-    <div>
-        {{overallData}}
+{% block title %}Netflix-like app{% endblock %}
+
+{% block main %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1>Movies</h1>
+            <hr>
+        </div>
     </div>
-    <div>
-        {{actionData}}
-    </div>
-    <div>
-        {{animationData}}
-    </div>
-    <div>
-        {{horrorData}}
-    </div>
-{% endblock content %}
+</div>
+{% endblock %}
