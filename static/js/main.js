@@ -10,15 +10,24 @@ async function fetchTop20Genre(genre) {
     }
 }
 
-function isolateTop20(genre) {
+async function isolateTop20(genre) {
     var isolatedMoviesTop20 = [];
     if (genre) {
-        isolatedMoviesTop20[genre] = fetchTop20Genre(genre);
+        isolatedMoviesTop20[genre] = await fetchTop20Genre(genre);
         return isolatedMoviesTop20[genre];
     }
 }
 
-Promise.all([isolateTop20('overall'), isolateTop20('action'), isolateTop20('horror'), isolateTop20('animation')])
-.then(result => {
-    result.forEach(element => console.log(element));
-})
+function show_data(genre) {
+    var movies = [];
+    Promise.all([isolateTop20(genre)])
+    .then(result => {
+        console.log(result['0']);
+        document.getElementById(genre).innerHTML = JSON.stringify(result);
+    })
+}
+
+show_data('overall');
+show_data('action');
+show_data('horror');
+show_data('animation');
