@@ -1,0 +1,39 @@
+body {
+    background: black;
+    color: white;
+    font-family: sans-serif;
+  }
+  * {
+    box-sizing: border-box;
+  }
+  
+  h1 {
+    color: rgb(0, 225, 255);
+  }
+
+  h2 {
+      color: rgb(133, 172, 179)
+  }
+  
+  img {
+    width: 75%;
+    height: 75%;
+  }
+  
+
+  /**
+  CAROUSEL
+  */
+  .carousel {
+      position: relative;
+  }
+  
+  .carousel__container::after {
+    content: '';
+    clear: both;
+    display: table;
+  }
+
+  .carousel__movie {
+      float: left;
+  }
