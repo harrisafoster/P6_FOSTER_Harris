@@ -2,18 +2,18 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-        <!-- stylesheet here-->
-        <title>Tests</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>JustStreamIt</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico')}}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css')}}">
+        <script type=text/javascript src="{{url_for('static', filename='js/main.js') }}"></script>
         <!-- responsive design? cell phone vs. computer screen size -->
     </head>
     <body>
-        <div class="container">
-            {% block title %}
-            {% endblock %}
-            {% block main %}
-            {% endblock %}
-        </div>
+        {% block title %}
+        {% endblock %}
+        {% block main %}
+        {% endblock %}
     </body>
 </html>
