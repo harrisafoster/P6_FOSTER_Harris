@@ -15,6 +15,7 @@ class Carousel {
             slidesVisible: 1
         }, options)
         let children = [].slice.call(element.children)
+        this.isMobile = false
         this.currentMovie = 0
         this.root = this.createDivWithClass('carousel')
         this.container = this.createDivWithClass('carousel__container')
@@ -28,15 +29,17 @@ class Carousel {
         })
         this.setStyle();
         this.createNavigation();
+        this.onWindowResize();
+        window.addEventListener('resize', this.onWindowResize.bind(this));
     }
 
     /**
      * Applique les bonnes dimensions aux éléments du carousel
      */
     setStyle () {
-        let ratio = this.movies.length / this.options.slidesVisible;
+        let ratio = this.movies.length / this.slidesVisible;
         this.container.style.width = (ratio * 100) + "%";
-        this.movies.forEach(movie => movie.style.width = ((100 / this.options.slidesVisible) / ratio) + "%");
+        this.movies.forEach(movie => movie.style.width = ((100 / this.slidesVisible) / ratio) + "%");
     }
 
     createNavigation () {
@@ -49,11 +52,11 @@ class Carousel {
     }
 
     next () {
-        this.gotoItem(this.currentMovie + this.options.slidesToScroll)
+        this.gotoItem(this.currentMovie + this.slidesToScroll)
     }
 
     prev () {
-        this.gotoItem(this.currentMovie - this.options.slidesToScroll)
+        this.gotoItem(this.currentMovie - this.slidesToScroll)
     }
 
     /**
@@ -71,6 +74,14 @@ class Carousel {
         this.currentMovie = index;
     }
 
+    onWindowResize () {
+        let mobile = window.innerWidth < 800
+        if (mobile != this.isMobile) {
+            this.isMobile = mobile
+            this.setStyle()
+        }
+    }
+
     /**
      * 
      * @param {string} className 
@@ -80,6 +91,20 @@ class Carousel {
         let div = document.createElement('div')
         div.setAttribute('class', className)
         return div
+    }
+
+    /**
+     * @returns {number}
+     */
+    get slidesToScroll () {
+        return this.isMobile ? 1 : this.options.slidesToScroll
+    }
+
+    /**
+     * @returns {number}
+     */
+    get slidesVisible () {
+        return this.isMobile ? 1 : this.options.slidesVisible
     }
 
 }
@@ -128,12 +153,12 @@ function show_data(genre) {
     var movies = [];
     Promise.all([isolateTop20(genre)])
     .then(result => {
-        console.log(result['0']);
-        document.getElementById(genre).innerHTML = JSON.stringify(result);
+        let currentArray = result['0'];
+        currentArray.forEach(movie => console.log(movie['title']));
     })
 }
 
-//show_data('overall');
+show_data('overall');
 //show_data('action');
 //show_data('horror');
 //show_data('animation');
