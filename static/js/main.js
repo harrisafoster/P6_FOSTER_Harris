@@ -14,19 +14,61 @@ class Carousel {
             slidesToScroll: 1,
             slidesVisible: 1
         }, options)
-        this.children = [].slice.call(element.children)
-        let ratio = this.children.length / this.options.slidesVisible
-        let root = this.createDivWithClass('carousel')
-        let container = this.createDivWithClass('carousel__container')
-        container.style.width = (ratio * 100) + "%"
-        root.appendChild(container)
-        this.element.appendChild(root)
-        this.children.forEach((child) => {
+        let children = [].slice.call(element.children)
+        this.currentMovie = 0
+        this.root = this.createDivWithClass('carousel')
+        this.container = this.createDivWithClass('carousel__container')
+        this.root.appendChild(this.container)
+        this.element.appendChild(this.root)
+        this.movies = children.map((child) => {
             let movie = this.createDivWithClass('carousel__movie')
-            movie.style.width = ((100 / this.options.slidesVisible) / ratio) + "%"
             movie.appendChild(child)
-            container.appendChild(movie)
+            this.container.appendChild(movie)
+            return movie
         })
+        this.setStyle();
+        this.createNavigation();
+    }
+
+    /**
+     * Applique les bonnes dimensions aux éléments du carousel
+     */
+    setStyle () {
+        let ratio = this.movies.length / this.options.slidesVisible;
+        this.container.style.width = (ratio * 100) + "%";
+        this.movies.forEach(movie => movie.style.width = ((100 / this.options.slidesVisible) / ratio) + "%");
+    }
+
+    createNavigation () {
+        let nextButton = this.createDivWithClass('carousel__next');
+        let prevButton = this.createDivWithClass('carousel__prev');
+        this.root.appendChild(nextButton);
+        this.root.appendChild(prevButton);
+        nextButton.addEventListener('click', this.next.bind(this));
+        prevButton.addEventListener('click', this.prev.bind(this));
+    }
+
+    next () {
+        this.gotoItem(this.currentMovie + this.options.slidesToScroll)
+    }
+
+    prev () {
+        this.gotoItem(this.currentMovie - this.options.slidesToScroll)
+    }
+
+    /**
+     * Défile les films selon l'index indiqué.
+     * @param {number} index 
+     */
+    gotoItem(index) {
+        if (index < 0) {
+            index = this.movies.length - this.options.slidesVisible
+        } else if (index >= this.movies.length || this.movies[this.currentMovie + this.options.slidesVisible] === undefined) {
+            index = 0
+        }
+        let translateX = index * -100 / this.movies.length;
+        this.container.style.transform = 'translate3d(' + translateX + '%, 0, 0)';
+        this.currentMovie = index;
     }
 
     /**
@@ -44,19 +86,19 @@ class Carousel {
 
 document.addEventListener('DOMContentLoaded', function() {
     new Carousel(document.querySelector("#carouselOverall"), {
-        slidesToScroll: 5,
+        slidesToScroll: 3,
         slidesVisible: 5
     })
     new Carousel(document.querySelector("#carouselAction"), {
-        slidesToScroll: 5,
+        slidesToScroll: 3,
         slidesVisible: 5
     })
     new Carousel(document.querySelector("#carouselHorror"), {
-        slidesToScroll: 5,
+        slidesToScroll: 3,
         slidesVisible: 5
     })
     new Carousel(document.querySelector("#carouselAnimation"), {
-        slidesToScroll: 5,
+        slidesToScroll: 3,
         slidesVisible: 5
     })
 })

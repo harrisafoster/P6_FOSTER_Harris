@@ -27,6 +27,11 @@ body {
   .carousel {
       position: relative;
   }
+
+  .carousel__container {
+    transition: transform 0.3s;
+    transform: translate3d(0, 0, 0);
+  }
   
   .carousel__container::after {
     content: '';
@@ -36,4 +41,29 @@ body {
 
   .carousel__movie {
       float: left;
+  }
+
+  .carousel__next, .carousel__prev {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: rgb(13, 13, 14) url(next.svg) center center no-repeat;
+    background-size: 30px 30px;
+    border-radius: 80%;
+    top: 50%;
+    margin-top: -20px;
+    right: 20px;
+    box-shadow: 0 8px 18px #3232321a, 0 5px 15px #0000001a;
+    cursor: pointer;
+    transition: transform 0.3s;
+  }
+
+  .carousel__next:hover, .carousel__prev:hover {
+    transform: scale(1.2);
+  }
+
+  .carousel__prev {
+    background-image: url(prev.svg);
+    right: auto;
+    left: -20px;
   }
