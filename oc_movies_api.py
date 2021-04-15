@@ -13,6 +13,7 @@ class OcMoviesApi:
             search_parameters['page'] = page
             requested_data = requests.get(url, params=search_parameters)
             dicted_data = json.loads(requested_data.content)
+            ##requested_data.json() simplement
             i = (int(page) * 5) - 4
             for movie in dicted_data['results']:
                 top_20_data.append({'id': movie['id'], 'title': movie['title'], 'image_url': movie['image_url']})
@@ -30,3 +31,10 @@ class OcMoviesApi:
     
     def get_film_by_id(self, id):
         return json.loads(requests.get((self.url + str(id))).content)
+
+    def top_film_overall(self):
+        requested_data = requests.get(self.url, params={'sort_by': '-imdb_score'})
+        dicted_data = json.loads(requested_data.content)
+        topfilm = dicted_data['results'][0]
+        topfilm_data = {'id': topfilm['id'], 'title': topfilm['title'], 'image_url': topfilm['image_url']}
+        return topfilm_data

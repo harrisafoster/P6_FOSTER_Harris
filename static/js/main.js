@@ -108,6 +108,7 @@ class Carousel {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    showTopFilm();
     show_data('overall', 'carouselOverall');
     show_data('action', 'carouselAction');
     show_data('horror', 'carouselHorror');
@@ -125,7 +126,7 @@ function renderTop20 (genre, carousel_name) {
 
 async function fetchTop20Genre(genre) {
     if (genre === 'overall') {
-        const response = await fetch(('http://localhost:5000/top20/overall'));
+        const response = await fetch('http://localhost:5000/top20/overall');
         var movies = await response.json();
         return movies;
     } else {
@@ -143,17 +144,36 @@ async function isolateTop20(genre) {
     }
 }
 
+async function showTopFilm () {
+    fetch('http://localhost:5000/topfilm')
+    //json conversion twice ?
+    .then(response => response.json())
+    .then(data => {
+        var featuredSlot = document.getElementById('topfilm');
+        var title = document.createElement('p');
+        title.setAttribute('class', 'movie__title');
+        title.innerHTML = data['title'];
+        var image = document.createElement('img');
+        image.setAttribute('class', 'featured__image');
+        image.setAttribute('src', data['image_url']);
+        featuredSlot.appendChild(title);
+        featuredSlot.appendChild(image);
+    })
+}
+
 function show_data(genre, carousel_name) {
     Promise.all([isolateTop20(genre)])
     .then(result => result['0'])
     .then(data => data.forEach(movie => {
-        console.log(movie);
+        //Movie div creation and adjustment
         var div = document.createElement('div');
         div.setAttribute('class', 'carousel__movie');
         div.setAttribute('id', movie['id']);
+        //Title paragraph creation and adjustment
         var title = document.createElement('p');
         title.setAttribute('class', 'movie__title');
         title.innerHTML = movie['title'];
+        //Image rendering and adjustment
         var image = document.createElement('img');
         image.setAttribute('class', 'movie__image');
         image.setAttribute('src', movie['image_url']);
@@ -170,6 +190,5 @@ function show_data(genre, carousel_name) {
     })
 }
 
-//show_data('action');
-//show_data('horror');
-//show_data('animation');
+//can search for all movie divs and add on-click action, use classes! Can search by image and then use stored ID to do request.
+//dossier SVG, only css in the css file

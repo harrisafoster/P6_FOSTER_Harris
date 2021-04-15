@@ -21,6 +21,11 @@ body {
     object-fit: cover;
   }
   
+  .featured__image {
+    width: 400px;
+    height: 600px;
+    object-fit: cover;
+  }
 
   /**
   CAROUSEL

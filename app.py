@@ -26,5 +26,12 @@ def query_by_id(movie_id):
     api = OcMoviesApi()
     return api.get_film_by_id(movie_id)
 
+@app.route('/topfilm')
+def query_top_film():
+    api = OcMoviesApi()
+    return api.top_film_overall()
+
 if __name__ == "__main__":
     app.run(debug=True)
+
+## add doctrings
