@@ -1,5 +1,3 @@
-console.log('The javascript loaded');
-
 class Carousel {
     /**
      * 
@@ -110,6 +108,7 @@ class Carousel {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    show_data('animation', 'carouselAnimation');
     new Carousel(document.querySelector("#carouselOverall"), {
         slidesToScroll: 3,
         slidesVisible: 5
@@ -149,16 +148,27 @@ async function isolateTop20(genre) {
     }
 }
 
-function show_data(genre) {
-    var movies = [];
+function show_data(genre, carousel_name) {
     Promise.all([isolateTop20(genre)])
-    .then(result => {
-        let currentArray = result['0'];
-        currentArray.forEach(movie => console.log(movie['title']));
-    })
+    .then(result => result['0'])
+    .then(data => data.forEach(movie => {
+        console.log(movie);
+        var div = document.createElement('div');
+        div.setAttribute('class', 'carousel__movie');
+        var title = document.createElement('p');
+        title.setAttribute('class', 'movie__title');
+        title.innerHTML = movie['title'];
+        var image = document.createElement('img');
+        image.setAttribute('class', 'movie__image');
+        image.setAttribute('src', movie['image_url']);
+        div.appendChild(image);
+        div.appendChild(title);
+        var carousel = document.getElementById(carousel_name).firstElementChild;
+        var carouselContainer = carousel.firstElementChild;
+        carouselContainer.appendChild(div)
+    }))
 }
 
-show_data('overall');
 //show_data('action');
 //show_data('horror');
 //show_data('animation');
