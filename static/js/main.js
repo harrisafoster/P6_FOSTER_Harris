@@ -108,25 +108,20 @@ class Carousel {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    show_data('overall', 'carouselOverall');
+    show_data('action', 'carouselAction');
+    show_data('horror', 'carouselHorror');
     show_data('animation', 'carouselAnimation');
-    new Carousel(document.querySelector("#carouselOverall"), {
-        slidesToScroll: 3,
-        slidesVisible: 5
-    })
-    new Carousel(document.querySelector("#carouselAction"), {
-        slidesToScroll: 3,
-        slidesVisible: 5
-    })
-    new Carousel(document.querySelector("#carouselHorror"), {
-        slidesToScroll: 3,
-        slidesVisible: 5
-    })
-    new Carousel(document.querySelector("#carouselAnimation"), {
-        slidesToScroll: 3,
-        slidesVisible: 5
-    })
+
 })
 
+function renderTop20 (genre, carousel_name) {
+    show_data(genre, carousel_name);
+    new Carousel(document.querySelector('#' + carousel_name), {
+        slidesToScroll: 3,
+        slidesVisible: 5
+    })
+}
 
 async function fetchTop20Genre(genre) {
     if (genre === 'overall') {
@@ -155,6 +150,7 @@ function show_data(genre, carousel_name) {
         console.log(movie);
         var div = document.createElement('div');
         div.setAttribute('class', 'carousel__movie');
+        div.setAttribute('id', movie['id']);
         var title = document.createElement('p');
         title.setAttribute('class', 'movie__title');
         title.innerHTML = movie['title'];
@@ -163,10 +159,15 @@ function show_data(genre, carousel_name) {
         image.setAttribute('src', movie['image_url']);
         div.appendChild(image);
         div.appendChild(title);
-        var carousel = document.getElementById(carousel_name).firstElementChild;
-        var carouselContainer = carousel.firstElementChild;
-        carouselContainer.appendChild(div)
+        var carousel = document.getElementById(carousel_name);
+        carousel.appendChild(div)
     }))
+    .then(result => {
+        new Carousel(document.querySelector('#' + carousel_name), {
+            slidesToScroll: 3,
+            slidesVisible: 5
+        })
+    })
 }
 
 //show_data('action');
