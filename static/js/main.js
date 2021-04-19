@@ -235,6 +235,9 @@ function createModal (movieId) {
         modalContainer.appendChild(modal);
         carouselMovieContainer.appendChild(modalContainer);
         carouselMovieContainer.firstChild.classList.add('modal__container__active');
+        modalClose.addEventListener('click', function () {
+            carouselMovieContainer.firstChild.classList.remove('modal__container__active');
+        })
     })
 }
 
