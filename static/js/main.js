@@ -113,7 +113,6 @@ document.addEventListener('DOMContentLoaded', function() {
     show_data('action', 'carouselAction');
     show_data('horror', 'carouselHorror');
     show_data('animation', 'carouselAnimation');
-
 })
 
 function renderTop20 (genre, carousel_name) {
@@ -144,9 +143,14 @@ async function isolateTop20(genre) {
     }
 }
 
+async function fetchMovieById(id) {
+    const response = await fetch('http://localhost:5000/movies/id/' + String(id));
+    var movie = await response.json();
+    return movie;
+}
+
 async function showTopFilm () {
     fetch('http://localhost:5000/topfilm')
-    //json conversion twice ?
     .then(response => response.json())
     .then(data => {
         var featuredSlot = document.getElementById('topfilm');
@@ -156,8 +160,81 @@ async function showTopFilm () {
         var image = document.createElement('img');
         image.setAttribute('class', 'featured__image');
         image.setAttribute('src', data['image_url']);
+        var description = document.createElement('p');
+        description.setAttribute('class', 'movie__description');
+        description.innerHTML = data['description'];
         featuredSlot.appendChild(title);
         featuredSlot.appendChild(image);
+        featuredSlot.appendChild(description);
+    })
+}
+
+function createModal (movieId) {
+    let carouselMovieContainer = document.getElementById('modal__location');
+    if (carouselMovieContainer.hasChildNodes()) {
+        carouselMovieContainer.firstChild.remove()
+    }
+    fetchMovieById(movieId)
+    .then(movie => {
+        var modalContainer = document.createElement('div');
+        modalContainer.setAttribute('class', 'modal__container');
+        var modal = document.createElement('div');
+        modal.setAttribute('class', 'modal');
+        var modalImage = document.createElement('img');
+        modalImage.setAttribute('class', 'modal__image');
+        modalImage.setAttribute('src', movie['image_url']);
+        var modalTitle = document.createElement('p');
+        modalTitle.setAttribute('class', 'modal__title');
+        modalTitle.innerHTML = movie['title'];
+        var modalGenre = document.createElement('ul');
+        modalGenre.setAttribute('class', 'modal__genre');
+        modalGenre.innerHTML = movie['genres'];
+        var modalReleaseDate = document.createElement('p');
+        modalReleaseDate.setAttribute('class', 'modal__releaseDate');
+        modalReleaseDate.innerHTML = movie['date_published']
+        var modalRating = document.createElement('p');
+        modalRating.setAttribute('class', 'modal__rating');
+        modalRating.innerHTML = movie['rated'];
+        var modalImbdScore = document.createElement('p');
+        modalImbdScore.setAttribute('class', 'modal__imdbScore');
+        modalImbdScore.innerHTML = movie['imdb_score'];
+        var modalDirector = document.createElement('ul');
+        modalDirector.setAttribute('class', 'modal__director');
+        modalDirector.innerHTML = movie['directors'];
+        var modalActors = document.createElement('ul');
+        modalActors.setAttribute('class', 'modal__actors');
+        modalActors.innerHTML = movie['actors'];
+        var modalDuration = document.createElement('p');
+        modalDuration.setAttribute('class', 'modal__duration');
+        modalDuration.innerHTML = movie['duration'];
+        var modalCountryOfOrigin = document.createElement('p');
+        modalCountryOfOrigin.setAttribute('class', 'modal__countryOfOrigin');
+        modalCountryOfOrigin.innerHTML = movie['countries'];
+        var modalBoxOfficeResult = document.createElement('p');
+        modalBoxOfficeResult.setAttribute('class', 'modal__boxOfficeResult');
+        modalBoxOfficeResult.innerHTML = movie['worldwide_gross_income'];
+        var modalDescription = document.createElement('p');
+        modalDescription.setAttribute('class', 'modal__description');
+        modalDescription.innerHTML = movie['long_description'];
+        var modalClose = document.createElement('span');
+        modalClose.setAttribute('class', 'modal__close');
+        modalClose.innerHTML = 'X';
+        modal.appendChild(modalImage);
+        modal.appendChild(modalTitle);
+        modal.appendChild(modalGenre);
+        modal.appendChild(modalReleaseDate);
+        modal.appendChild(modalRating);
+        modal.appendChild(modalImbdScore);
+        modal.appendChild(modalDirector);
+        modal.appendChild(modalActors);
+        modal.appendChild(modalDuration);
+        modal.appendChild(modalCountryOfOrigin);
+        modal.appendChild(modalBoxOfficeResult);
+        modal.appendChild(modalDescription);
+        modal.appendChild(modalClose);
+        modalContainer.appendChild(modal);
+        carouselMovieContainer.appendChild(modalContainer);
+        carouselMovieContainer.firstChild.classList.add('modal__container__active');
     })
 }
 
@@ -167,7 +244,7 @@ function show_data(genre, carousel_name) {
     .then(data => data.forEach(movie => {
         //Movie div creation and adjustment
         var div = document.createElement('div');
-        div.setAttribute('class', 'carousel__movie');
+        div.setAttribute('class', 'carousel__movie__container');
         div.setAttribute('id', movie['id']);
         //Title paragraph creation and adjustment
         var title = document.createElement('p');
@@ -179,8 +256,12 @@ function show_data(genre, carousel_name) {
         image.setAttribute('src', movie['image_url']);
         div.appendChild(image);
         div.appendChild(title);
+        //Comment ajouter les event listeners pour chaque film ???
+        div.addEventListener('click', Event => {
+            createModal(movie['id'])
+        });
         var carousel = document.getElementById(carousel_name);
-        carousel.appendChild(div)
+        carousel.appendChild(div);
     }))
     .then(result => {
         new Carousel(document.querySelector('#' + carousel_name), {
@@ -189,6 +270,4 @@ function show_data(genre, carousel_name) {
         })
     })
 }
-
 //can search for all movie divs and add on-click action, use classes! Can search by image and then use stored ID to do request.
-//dossier SVG, only css in the css file
