@@ -115,14 +115,11 @@ document.addEventListener('DOMContentLoaded', function() {
     show_data('animation', 'carouselAnimation');
 })
 
-function renderTop20 (genre, carousel_name) {
-    show_data(genre, carousel_name);
-    new Carousel(document.querySelector('#' + carousel_name), {
-        slidesToScroll: 3,
-        slidesVisible: 5
-    })
-}
-
+/**
+ * 
+ * @param {string} genre 
+ * @returns {promise} json data on top 20 films of requested genre 
+ */
 async function fetchTop20Genre(genre) {
     if (genre === 'overall') {
         const response = await fetch('http://localhost:5000/top20/overall');
@@ -135,6 +132,11 @@ async function fetchTop20Genre(genre) {
     }
 }
 
+/**
+ * 
+ * @param {string} genre 
+ * @returns {array} data of the genre requested
+ */
 async function isolateTop20(genre) {
     var isolatedMoviesTop20 = [];
     if (genre) {
@@ -143,79 +145,102 @@ async function isolateTop20(genre) {
     }
 }
 
+/**
+ * 
+ * @param {string} id 
+ * @returns {json} data on requested film
+ */
 async function fetchMovieById(id) {
     const response = await fetch('http://localhost:5000/movies/id/' + String(id));
     var movie = await response.json();
     return movie;
 }
 
+/**
+ * Renders the featured film section at the top of the page
+ */
 async function showTopFilm () {
     fetch('http://localhost:5000/topfilm')
     .then(response => response.json())
     .then(data => {
         var featuredSlot = document.getElementById('topfilm');
         var title = document.createElement('p');
-        title.setAttribute('class', 'movie__title');
+        title.setAttribute('class', 'featured__movie__title');
         title.innerHTML = data['title'];
         var image = document.createElement('img');
         image.setAttribute('class', 'featured__image');
         image.setAttribute('src', data['image_url']);
         var description = document.createElement('p');
-        description.setAttribute('class', 'movie__description');
+        description.setAttribute('class', 'featured__movie__description');
         description.innerHTML = data['description'];
+        var button = document.createElement('btn');
+        button.setAttribute('class', 'featured__film__button');
+        button.innerHTML = 'See this on IMDB';
+        button.addEventListener('click', Event => {
+            window.open("https://www.imdb.com/title/tt000000" + data['id']);
+        })
         featuredSlot.appendChild(title);
         featuredSlot.appendChild(image);
+        featuredSlot.appendChild(button);
         featuredSlot.appendChild(description);
     })
 }
 
-function createModal (movieId) {
-    let carouselMovieContainer = document.getElementById('modal__location');
-    if (carouselMovieContainer.hasChildNodes()) {
-        carouselMovieContainer.firstChild.remove()
+/**
+ * 
+ * @param {string} movieId 
+ * @param {string} movieGenre 
+ * Creates the modal window pertaining to the film that is clicked
+ * It does this by executing a fetch request with the film's ID number
+ * After retrieving the desired data the function creates the modal window
+ * as well as its closeModal span button and the ability to close the window
+ * by clicking outside of it.
+ */
+function createModal (movieId, movieGenre) {
+    let modalContainer = document.getElementById('modal__location');
+    if (modalContainer.hasChildNodes()) {
+        modalContainer.innerHTML = "";
     }
     fetchMovieById(movieId)
     .then(movie => {
-        var modalContainer = document.createElement('div');
-        modalContainer.setAttribute('class', 'modal__container');
         var modal = document.createElement('div');
-        modal.setAttribute('class', 'modal');
+        modal.setAttribute('class', 'modal__container');
         var modalImage = document.createElement('img');
         modalImage.setAttribute('class', 'modal__image');
         modalImage.setAttribute('src', movie['image_url']);
-        var modalTitle = document.createElement('p');
+        var modalTitle = document.createElement('h3');
         modalTitle.setAttribute('class', 'modal__title');
-        modalTitle.innerHTML = movie['title'];
+        modalTitle.innerHTML = movie['original_title'];
         var modalGenre = document.createElement('ul');
         modalGenre.setAttribute('class', 'modal__genre');
-        modalGenre.innerHTML = movie['genres'];
+        modalGenre.innerHTML = 'Genres: ' + movie['genres'];
         var modalReleaseDate = document.createElement('p');
         modalReleaseDate.setAttribute('class', 'modal__releaseDate');
-        modalReleaseDate.innerHTML = movie['date_published']
+        modalReleaseDate.innerHTML = 'Date released: ' + movie['date_published']
         var modalRating = document.createElement('p');
         modalRating.setAttribute('class', 'modal__rating');
-        modalRating.innerHTML = movie['rated'];
+        modalRating.innerHTML = 'Rating: ' + movie['rated'];
         var modalImbdScore = document.createElement('p');
         modalImbdScore.setAttribute('class', 'modal__imdbScore');
-        modalImbdScore.innerHTML = movie['imdb_score'];
+        modalImbdScore.innerHTML = 'IMDB Score: ' + movie['imdb_score'];
         var modalDirector = document.createElement('ul');
         modalDirector.setAttribute('class', 'modal__director');
-        modalDirector.innerHTML = movie['directors'];
+        modalDirector.innerHTML = 'Directors: '+ movie['directors'];
         var modalActors = document.createElement('ul');
         modalActors.setAttribute('class', 'modal__actors');
-        modalActors.innerHTML = movie['actors'];
+        modalActors.innerHTML = 'Actors: ' + movie['actors'];
         var modalDuration = document.createElement('p');
         modalDuration.setAttribute('class', 'modal__duration');
-        modalDuration.innerHTML = movie['duration'];
+        modalDuration.innerHTML = 'Duration (minutes): ' + movie['duration'];
         var modalCountryOfOrigin = document.createElement('p');
         modalCountryOfOrigin.setAttribute('class', 'modal__countryOfOrigin');
-        modalCountryOfOrigin.innerHTML = movie['countries'];
+        modalCountryOfOrigin.innerHTML = 'Country of origin: '+ movie['countries'];
         var modalBoxOfficeResult = document.createElement('p');
         modalBoxOfficeResult.setAttribute('class', 'modal__boxOfficeResult');
-        modalBoxOfficeResult.innerHTML = movie['worldwide_gross_income'];
+        modalBoxOfficeResult.innerHTML = 'Box Office Result: ' + movie['worldwide_gross_income'];
         var modalDescription = document.createElement('p');
         modalDescription.setAttribute('class', 'modal__description');
-        modalDescription.innerHTML = movie['long_description'];
+        modalDescription.innerHTML = 'Summary of film: ' + movie['long_description'];
         var modalClose = document.createElement('span');
         modalClose.setAttribute('class', 'modal__close');
         modalClose.innerHTML = 'X';
@@ -233,14 +258,26 @@ function createModal (movieId) {
         modal.appendChild(modalDescription);
         modal.appendChild(modalClose);
         modalContainer.appendChild(modal);
-        carouselMovieContainer.appendChild(modalContainer);
-        carouselMovieContainer.firstChild.classList.add('modal__container__active');
+        modalContainer.firstChild.classList.add('modal__container__active');
         modalClose.addEventListener('click', function () {
-            carouselMovieContainer.firstChild.classList.remove('modal__container__active');
+            modalContainer.firstChild.classList.remove('modal__container__active');
+            modalContainer.innerHTML = "";
+        })
+        window.addEventListener('click', event => {
+            if (event.target != modalContainer) {
+                modalContainer.innerHTML = "";
+            }
         })
     })
 }
 
+/**
+ * 
+ * @param {string} genre 
+ * @param {string} carousel_name 
+ * Populates the specified carousel with the appropriate top20 data
+ * Also creates the onClick event to open modal windows.
+ */
 function show_data(genre, carousel_name) {
     Promise.all([isolateTop20(genre)])
     .then(result => result['0'])
@@ -259,7 +296,7 @@ function show_data(genre, carousel_name) {
         image.setAttribute('src', movie['image_url']);
         div.appendChild(image);
         div.appendChild(title);
-        //Comment ajouter les event listeners pour chaque film ???
+        //Adds event to create the modal window onClick
         div.addEventListener('click', Event => {
             createModal(movie['id'])
         });
@@ -268,9 +305,8 @@ function show_data(genre, carousel_name) {
     }))
     .then(result => {
         new Carousel(document.querySelector('#' + carousel_name), {
-            slidesToScroll: 3,
-            slidesVisible: 5
+            slidesToScroll: 4,
+            slidesVisible: 7
         })
     })
 }
-//can search for all movie divs and add on-click action, use classes! Can search by image and then use stored ID to do request.
