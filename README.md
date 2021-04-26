@@ -27,7 +27,7 @@ $ cd ocmovies-api
 #### Clonez la source de JustStreamIt localement (en utilisant votre terminal) :
 ```sh
 $ git clone https://github.com/harrisafoster/P6_FOSTER_Harris
-$ cd P4_Foster_Harris
+$ cd P6_FOSTER_Harris
 ```
 #### Ouvrez deux fenêtres de votre terminal
 
@@ -72,13 +72,12 @@ $ python manage.py runserver
 $ python app.py
 ```
 ### Puis vous pouvez accéder à l'application dans votre navigateur en mettant :
-localhost:5000/
-### Dans la barre de navigation de votre navigateur préféré
+localhost:5000/ (dans la barre de navigation de votre navigateur préféré)
 
 Dès que le logiciel est lancé, vous pouvez regarder les details sur tous les films en cliquant sur leurs images. Et vous pouvez defiler entre les differents films en utilisants les flèches à gauche et à droite de chaque catégorie. 
 
 ## Built with
-Python 3.9
-JavaScript
-CSS
-HTML
+Python 3.9 <br />
+JavaScript <br />
+CSS <br />
+HTML 
