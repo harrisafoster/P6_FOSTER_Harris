@@ -22,20 +22,20 @@ class OcMoviesApi:
         :param '*args': url for accessing API, search parameters for defining
         search criteria
         '''
-        top_20_data = []
-        for page in ['1', '2', '3', '4']:
+        top_7_data = []
+        for page in ['1', '2']:
             search_parameters['page'] = page
             requested_data = (requests.get(url, params=search_parameters)).json()
             i = (int(page) * 5) - 4
             for movie in requested_data['results']:
-                top_20_data.append({'id': movie['id'], 'title': movie['title'], 'image_url': movie['image_url']})
+                top_7_data.append({'id': movie['id'], 'title': movie['title'], 'image_url': movie['image_url']})
                 i += 1
-        final_data = json.dumps(top_20_data)
+        final_data = json.dumps(top_7_data[:7])
         return final_data
 
-    def top_20_genre(self, genre):
+    def top_7_genre(self, genre):
         '''
-        .top_20_genre returns json data on the top 20 films of a given genre
+        .top_7_genre returns json data on the top 7 films of a given genre
         :param arg: genre of type str used to complete the search parameters
         when accessing the api
         :type arg: str
@@ -43,9 +43,9 @@ class OcMoviesApi:
         search_parameters = {'sort_by': '-imdb_score', 'genre': genre}
         return self.json_maker(self.url, search_parameters)
     
-    def top_20(self):
+    def top_7(self):
         '''
-        .top_20returns json data on the top 20 films overall
+        .top_7 returns json data on the top 7 films overall
         :param arg: no argument is needed
         '''
         search_parameters = {'sort_by': '-imdb_score'}

@@ -118,15 +118,15 @@ document.addEventListener('DOMContentLoaded', function() {
 /**
  * 
  * @param {string} genre 
- * @returns {promise} json data on top 20 films of requested genre 
+ * @returns {promise} json data on top 7 films of requested genre 
  */
-async function fetchTop20Genre(genre) {
+async function fetchTop7Genre(genre) {
     if (genre === 'overall') {
-        const response = await fetch('http://localhost:5000/top20/overall');
+        const response = await fetch('http://localhost:5000/top7/overall');
         var movies = await response.json();
         return movies;
     } else {
-        const response = await fetch('http://localhost:5000/top20/genre/' + genre);
+        const response = await fetch('http://localhost:5000/top7/genre/' + genre);
         var movies = await response.json();
         return movies;
     }
@@ -137,11 +137,11 @@ async function fetchTop20Genre(genre) {
  * @param {string} genre 
  * @returns {array} data of the genre requested
  */
-async function isolateTop20(genre) {
-    var isolatedMoviesTop20 = [];
+async function isolateTop7(genre) {
+    var isolatedMoviesTop7 = [];
     if (genre) {
-        isolatedMoviesTop20[genre] = await fetchTop20Genre(genre);
-        return isolatedMoviesTop20[genre];
+        isolatedMoviesTop7[genre] = await fetchTop7Genre(genre);
+        return isolatedMoviesTop7[genre];
     }
 }
 
@@ -205,58 +205,58 @@ function createModal (movieId, movieGenre) {
     .then(movie => {
         var modal = document.createElement('div');
         modal.setAttribute('class', 'modal__container');
+        //Description1 will contain the title and the image
+        var description1 = document.createElement('div');
+        description1.setAttribute('class', 'description__1');
         var modalImage = document.createElement('img');
-        modalImage.setAttribute('class', 'modal__image');
         modalImage.setAttribute('src', movie['image_url']);
         var modalTitle = document.createElement('h3');
-        modalTitle.setAttribute('class', 'modal__title');
         modalTitle.innerHTML = movie['original_title'];
-        var modalGenre = document.createElement('ul');
-        modalGenre.setAttribute('class', 'modal__genre');
-        modalGenre.innerHTML = 'Genres: ' + movie['genres'];
+        //Description2 will contain the releaseDate, Duration, CountryOfOrigin, Genres, Rating, IMDB score, and BoxOfficeResult
+        var description2 = document.createElement('div');
+        description2.setAttribute('class', 'description__2')
         var modalReleaseDate = document.createElement('p');
-        modalReleaseDate.setAttribute('class', 'modal__releaseDate');
-        modalReleaseDate.innerHTML = 'Date released: ' + movie['date_published']
-        var modalRating = document.createElement('p');
-        modalRating.setAttribute('class', 'modal__rating');
-        modalRating.innerHTML = 'Rating: ' + movie['rated'];
-        var modalImbdScore = document.createElement('p');
-        modalImbdScore.setAttribute('class', 'modal__imdbScore');
-        modalImbdScore.innerHTML = 'IMDB Score: ' + movie['imdb_score'];
-        var modalDirector = document.createElement('ul');
-        modalDirector.setAttribute('class', 'modal__director');
-        modalDirector.innerHTML = 'Directors: '+ movie['directors'];
-        var modalActors = document.createElement('ul');
-        modalActors.setAttribute('class', 'modal__actors');
-        modalActors.innerHTML = 'Actors: ' + movie['actors'];
+        modalReleaseDate.innerHTML = 'Date released: ' + movie['date_published'];
         var modalDuration = document.createElement('p');
-        modalDuration.setAttribute('class', 'modal__duration');
         modalDuration.innerHTML = 'Duration (minutes): ' + movie['duration'];
         var modalCountryOfOrigin = document.createElement('p');
-        modalCountryOfOrigin.setAttribute('class', 'modal__countryOfOrigin');
         modalCountryOfOrigin.innerHTML = 'Country of origin: '+ movie['countries'];
+        var modalGenre = document.createElement('p');
+        modalGenre.innerHTML = 'Genres: ' + movie['genres'];
+        var modalRating = document.createElement('p');
+        modalRating.innerHTML = 'Rating: ' + movie['rated'];
+        var modalImbdScore = document.createElement('p');
+        modalImbdScore.innerHTML = 'IMDB Score: ' + movie['imdb_score'];
         var modalBoxOfficeResult = document.createElement('p');
-        modalBoxOfficeResult.setAttribute('class', 'modal__boxOfficeResult');
-        modalBoxOfficeResult.innerHTML = 'Box Office Result: ' + movie['worldwide_gross_income'];
+        modalBoxOfficeResult.innerHTML = 'Box Office Result (in $ earned worldwide): ' + movie['worldwide_gross_income'] + ' $';
+        //Description3 will contain Directors, Actors, and the film summary
+        var description3 = document.createElement('div');
+        description3.setAttribute('class', 'description__3')
+        var modalDirector = document.createElement('p');
+        modalDirector.innerHTML = 'Directors: '+ movie['directors'];
+        var modalActors = document.createElement('p');
+        modalActors.innerHTML = 'Actors: ' + movie['actors'];
         var modalDescription = document.createElement('p');
-        modalDescription.setAttribute('class', 'modal__description');
         modalDescription.innerHTML = 'Summary of film: ' + movie['long_description'];
         var modalClose = document.createElement('span');
         modalClose.setAttribute('class', 'modal__close');
         modalClose.innerHTML = 'X';
-        modal.appendChild(modalImage);
-        modal.appendChild(modalTitle);
-        modal.appendChild(modalGenre);
-        modal.appendChild(modalReleaseDate);
-        modal.appendChild(modalRating);
-        modal.appendChild(modalImbdScore);
-        modal.appendChild(modalDirector);
-        modal.appendChild(modalActors);
-        modal.appendChild(modalDuration);
-        modal.appendChild(modalCountryOfOrigin);
-        modal.appendChild(modalBoxOfficeResult);
-        modal.appendChild(modalDescription);
+        description1.appendChild(modalTitle);
+        description1.appendChild(modalImage);
+        description2.appendChild(modalReleaseDate);
+        description2.appendChild(modalDuration);
+        description2.appendChild(modalCountryOfOrigin);
+        description2.appendChild(modalGenre);
+        description2.appendChild(modalRating);
+        description2.appendChild(modalImbdScore);
+        description2.appendChild(modalBoxOfficeResult);
+        description3.appendChild(modalDirector);
+        description3.appendChild(modalActors);
+        description3.appendChild(modalDescription);
         modal.appendChild(modalClose);
+        modal.appendChild(description1);
+        modal.appendChild(description2);
+        modal.appendChild(description3);
         modalContainer.appendChild(modal);
         modalContainer.firstChild.classList.add('modal__container__active');
         modalClose.addEventListener('click', function () {
@@ -275,11 +275,11 @@ function createModal (movieId, movieGenre) {
  * 
  * @param {string} genre 
  * @param {string} carousel_name 
- * Populates the specified carousel with the appropriate top20 data
+ * Populates the specified carousel with the appropriate top7 data
  * Also creates the onClick event to open modal windows.
  */
 function show_data(genre, carousel_name) {
-    Promise.all([isolateTop20(genre)])
+    Promise.all([isolateTop7(genre)])
     .then(result => result['0'])
     .then(data => data.forEach(movie => {
         //Movie div creation and adjustment
@@ -305,8 +305,8 @@ function show_data(genre, carousel_name) {
     }))
     .then(result => {
         new Carousel(document.querySelector('#' + carousel_name), {
-            slidesToScroll: 4,
-            slidesVisible: 7
+            slidesToScroll: 2,
+            slidesVisible: 4
         })
     })
 }
