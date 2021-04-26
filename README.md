@@ -72,7 +72,12 @@ $ python manage.py runserver
 $ python app.py
 ```
 ### Puis vous pouvez accéder à l'application dans votre navigateur en mettant :
-localhost:5000/ (dans la barre de navigation de votre navigateur préféré)
+```sh
+http://localhost:5000/
+```
+(dans la barre de navigation de votre navigateur préféré)
+
+## Mode d'emploi
 
 Dès que le logiciel est lancé, vous pouvez regarder les details sur tous les films en cliquant sur leurs images. Et vous pouvez defiler entre les differents films en utilisants les flèches à gauche et à droite de chaque catégorie. 
 
