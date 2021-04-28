@@ -22,7 +22,7 @@ Cette application vous recommande:
 #### Clonez la source de la base de données localement (en utilisant votre terminal) :
 ```sh
 $ git clone https://github.com/OpenClassrooms-Student-Center/OCMovies-API-EN-FR
-$ cd ocmovies-api
+$ cd OCMovies-API-EN-FR
 ```
 #### Clonez la source de JustStreamIt localement (en utilisant votre terminal) :
 ```sh
