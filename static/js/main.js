@@ -228,7 +228,7 @@ function createModal (movieId, movieGenre) {
         var modalImbdScore = document.createElement('p');
         modalImbdScore.innerHTML = 'IMDB Score: ' + movie['imdb_score'];
         var modalBoxOfficeResult = document.createElement('p');
-        modalBoxOfficeResult.innerHTML = 'Box Office Result (in $ earned worldwide): ' + movie['worldwide_gross_income'] + ' $';
+        modalBoxOfficeResult.innerHTML = 'Box Office Result (in amount earned worldwide): ' + movie['worldwide_gross_income'];
         //Description3 will contain Directors, Actors, and the film summary
         var description3 = document.createElement('div');
         description3.setAttribute('class', 'description__3')

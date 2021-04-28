@@ -57,7 +57,15 @@ class OcMoviesApi:
         :param arg: id number of film used to find a specific film in the api
         :type arg: str
         '''
-        return (requests.get(self.url + str(id))).json()
+        endpoint = f"{self.url}{id}"
+        response = requests.get(endpoint)
+        data = response.json()
+        worldwide_gross_income = data.get('worldwide_gross_income')
+        if worldwide_gross_income is None:
+            data["worldwide_gross_income"] = 'Data unavailable'
+        else:
+            data["worldwide_gross_income"] = f"{worldwide_gross_income:,}{'$'}"
+        return data
 
     def top_film_overall(self):
         '''
