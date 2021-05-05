@@ -1,6 +1,4 @@
-from flask import Flask, render_template, url_for
-import requests
-import json
+from flask import Flask, render_template
 from oc_movies_api import OcMoviesApi
 from flask_cors import CORS
 
@@ -32,6 +30,4 @@ def query_top_film():
     return api.top_film_overall()
 
 if __name__ == "__main__":
-    app.run(debug=True)
-
-## add doctrings
+    app.run()
